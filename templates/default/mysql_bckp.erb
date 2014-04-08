@@ -5,7 +5,7 @@ require 'multi_xml'
 
 origin = {
   :local_xml => '<%= node["mysql_bckp"]["local_xml"] %>',
-  :dump_file => 'dbdump.sql',
+  :dump_file => '<%= node["mysql_bckp"]["dump_file"] %>',
   :dump_path => '<%= node["mysql_bckp"]["dump_path"] %>',
 }
 
