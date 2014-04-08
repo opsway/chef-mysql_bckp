@@ -1,0 +1,31 @@
+#!/usr/bin/ruby
+
+require 'rubygems'
+require 'multi_xml'
+
+origin = {
+  :local_xml => '<%= node["mysql_bckp"]["local_xml"] %>',
+  :dump_file => 'dbdump.sql',
+  :dump_path => '<%= node["mysql_bckp"]["dump_path"] %>',
+}
+
+
+def mysql_dump origin
+  dump_file = origin[:dump_file]
+  dump_path = origin[:dump_path]
+  local_xml = origin[:local_xml]
+
+  if File.exists?(local_xml)
+    array_xml = IO.readlines(local_xml);
+    line_xml = ""
+    array_xml.each {|x| line_xml += x }
+    xml = MultiXml.parse line_xml
+  end
+  db = xml["config"]["global"]["resources"]["default_setup"]["connection"]
+  exec("sudo mkdir -p #{dump_path} && sudo chown -R  ubuntu:ubuntu #{dump_path} && cd #{dump_path} && if [ -f #{dump_file} ]; then rm #{dump_file}; fi && mysqldump -h #{db['host']} -u #{db['username']} -p#{db['password']} #{db['dbname']} --single-transaction >#{dump_file}" )
+end #mysql_dump
+
+
+
+
+mysql_dump origin
