@@ -22,10 +22,7 @@ def mysql_dump origin
     xml = MultiXml.parse line_xml
   end
   db = xml["config"]["global"]["resources"]["default_setup"]["connection"]
-  exec("sudo mkdir -p #{dump_path} && sudo chown -R  ubuntu:ubuntu #{dump_path} && cd #{dump_path} && if [ -f #{dump_file} ]; then rm #{dump_file}; fi && mysqldump -h #{db['host']} -u #{db['username']} -p#{db['password']} #{db['dbname']} --single-transaction >#{dump_file}" )
+  exec("cd #{dump_path} && if [ -f #{dump_file} ]; then rm #{dump_file}; fi && mysqldump -h #{db['host']} -u #{db['username']} -p#{db['password']} #{db['dbname']} --single-transaction >#{dump_file} && gzip #{dump_file}")
 end #mysql_dump
-
-
-
 
 mysql_dump origin
