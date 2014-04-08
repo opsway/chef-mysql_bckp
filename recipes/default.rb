@@ -8,4 +8,6 @@ source "mysql_bckp.erb"
   action :create
 end
 
-execute "find #{node["mysql_bckp"]["dump_path"]}/*.sql.gz -mtime +#{node["mysql_bckp"]['days_retain']} -exec rm -f {} \\\;"
+execute "find #{node["mysql_bckp"]["dump_path"]}/*.sql.gz -mtime +#{node["mysql_bckp"]['days_retain']} -exec rm -f {} \\\;" do
+	returns [0,1]
+end
